@@ -1,0 +1,14 @@
+:root {
+  font-family: sans-serif;
+
+  color-scheme: light dark;
+  color: #ebdbb2;
+  background-color: #242424;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+}
