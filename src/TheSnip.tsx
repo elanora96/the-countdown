@@ -1,25 +1,49 @@
-import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { PresentationControls } from "@react-three/drei";
+import { Canvas, useFrame } from "@react-three/fiber";
+import {
+  PresentationControls,
+  useAnimations,
+  useGLTF,
+} from "@react-three/drei";
 import { Suspense, useState } from "react";
 import type { FC } from "react";
 
-const Scissors = () => {
-  const scissors = useLoader(OBJLoader, "./Forbici.obj");
-  const [rotationAngle, setRotationAngle] = useState(0);
+interface ScissorsProps {
+  closePercent: number;
+}
 
-  scissors.traverse((child) => {
-    if (child.isObject3D && (child.name === "vt" || child.name === "f")) {
-      child.rotation.z = rotationAngle;
-    }
-  });
+const Scissors: FC<ScissorsProps> = (props) => {
+  const { closePercent } = props;
+  const { scene, animations } = useGLTF("./tailors_scissors/scene.gltf");
+  const { actions, mixer } = useAnimations(animations, scene);
 
-  useFrame(() => {
-    if (rotationAngle < Math.PI / 4) {
-      setRotationAngle((prev) => prev + 0.01);
-    }
-  });
-  return <primitive object={scissors} />;
+  actions?.Scene.play();
+
+  // const [progress, setProgress] = useState(0);
+  // const [isSnipping, setIsSnipping] = useState(true);
+
+  // useFrame(() => {
+  //   const action = actions?.Scene;
+
+  //   if (action) {
+  //     const clipDuration = action.getClip().duration;
+  //     action.time = (progress / 100) * clipDuration;
+  //     action.paused = true;
+  //     mixer.update(0);
+  //   }
+  // });
+
+  // const playToPercentage = (percent: number) => {
+  //   setProgress(percent);
+  //   setIsSnipping(true);
+  // };
+
+  // if (isSnipping) {
+  //   setIsSnipping(false);
+  // } else {
+  //   playToPercentage(progress === 100 ? 0 : progress + closePercent);
+  // }
+
+  return <primitive object={scene} />;
 };
 
 interface TheSnipProps {
@@ -29,8 +53,8 @@ interface TheSnipProps {
 export const TheSnip: FC<TheSnipProps> = (props) => {
   return (
     <Canvas className={props.className}>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 5]} />
+      <ambientLight intensity={0.75} />
+      <directionalLight position={[20, 5, 25]} />
       <PresentationControls
         enabled={true}
         global={false} // Spin globally or by dragging the model
@@ -38,10 +62,10 @@ export const TheSnip: FC<TheSnipProps> = (props) => {
         snap={true} // Snap-back to center (can also be a spring config)
         speed={1} // Speed factor
         zoom={1} // Zoom factor when half the polar-max is reached
-        rotation={[4, 1, 0.5]} // Default rotation
+        rotation={[0, 0.5, 0.75]} // Default rotation
       >
         <Suspense fallback={null}>
-          <Scissors />
+          <Scissors closePercent={100} />
         </Suspense>
       </PresentationControls>
     </Canvas>

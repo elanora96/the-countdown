@@ -18,6 +18,14 @@ const App: FC = () => {
     <main>
       <ClockTuah time={theDay} />
       <TheSnip className={styles.snip} />
+      <span className={styles.attribution}>
+        Model by{" "}
+        <a href="https://sketchfab.com/shuvalov.di">sketchfab:shuvalov.di</a> (
+        <a href="https://sketchfab.com/3d-models/tailors-scissors-2318ed5e22a2420a9ddaa914333f8fbf">
+          src
+        </a>
+        )
+      </span>
     </main>
   );
 };
